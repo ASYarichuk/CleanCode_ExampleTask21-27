@@ -3,7 +3,7 @@ private void CheckButtonClick(object sender, EventArgs e)
     string rawData = this.passportTextbox.Text.Trim().Replace(" ", string.Empty);
     int maxLengthRawData = 10;
 
-    if (this.passportTextbox.Text.Trim() == "")
+    if (this.passportTextbox.Text.Trim() == string.IsNullOrWhiteSpace())
     {
         int num1 = (int)MessageBox.Show("Введите серию и номер паспорта");
     }
@@ -32,6 +32,7 @@ private void SendRequest()
 {
     string commandText = string.Format("select * from passports where num='{0}' limit 1;", (object)Form1.ComputeSha256Hash(rawData));
     string connectionString = string.Format("Data Source=" + Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\db.sqlite");
+    string passportText = this.passportTextbox.Text;
 
     SQLiteConnection connection = new SQLiteConnection(connectionString);
 
@@ -45,24 +46,24 @@ private void SendRequest()
 
     if (dataTable.Rows.Count > 0)
     {
-        GetAccessText();
+        GetAccessText(passportText);
     }
     else
     {
-        this.textResult.Text = "Паспорт «" + this.passportTextbox.Text + "» в списке участников дистанционного голосования НЕ НАЙДЕН";
+        this.textResult.Text = "Паспорт «" + passportText + "» в списке участников дистанционного голосования НЕ НАЙДЕН";
     }
 
     connection.Close();
 }
 
-private void GetAccessText()
+private void GetAccessText(string passportText)
 {
     if (Convert.ToBoolean(dataTable.Rows[0].ItemArray[1]))
     {
-        this.textResult.Text = "По паспорту «" + this.passportTextbox.Text + "» доступ к бюллетеню на дистанционном электронном голосовании ПРЕДОСТАВЛЕН";
+        this.textResult.Text = "По паспорту «" + passportText + "» доступ к бюллетеню на дистанционном электронном голосовании ПРЕДОСТАВЛЕН";
     }
     else
     {
-        this.textResult.Text = "По паспорту «" + this.passportTextbox.Text + "» доступ к бюллетеню на дистанционном электронном голосовании НЕ ПРЕДОСТАВЛЯЛСЯ";
+        this.textResult.Text = "По паспорту «" + passportText + "» доступ к бюллетеню на дистанционном электронном голосовании НЕ ПРЕДОСТАВЛЯЛСЯ";
     }
 }
