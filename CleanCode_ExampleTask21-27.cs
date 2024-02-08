@@ -3,7 +3,7 @@ private void CheckButtonClick(object sender, EventArgs e)
     string rawData = this.passportTextbox.Text.Trim().Replace(" ", string.Empty);
     int maxLengthRawData = 10;
 
-    if (this.passportTextbox.Text.Trim() == string.IsNullOrWhiteSpace())
+    if (string.IsNullOrWhiteSpace(this.passportTextbox.Text.Trim()))
     {
         int num1 = (int)MessageBox.Show("¬ведите серию и номер паспорта");
     }
